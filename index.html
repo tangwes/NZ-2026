@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NZ Travel Plan 2026 v4.3.11</title>
+<title>NZ Travel Plan 2026 v4.3.12</title>
 <style>
 :root{--n:#102a43;--t:#0e7490;--g:#0f766e;--c:#f7f4ed;--m:#60758a;--line:#d7e7e8}
 *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;background:var(--c);color:var(--n)}
@@ -237,10 +237,40 @@ section.panel[data-p="Daily Itinerary"] td:nth-child(3) .tag{white-space:nowrap;
   section.panel[data-p="Daily Itinerary"] td:nth-child(5) .links{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important}
   section.panel[data-p="Daily Itinerary"] td:nth-child(5) .links a{display:block!important;margin:0!important;white-space:nowrap}
 }
+
+/* v4.3.12: password gate */
+body.is-locked{overflow:hidden}
+body.is-locked > header,
+body.is-locked > #nav,
+body.is-locked > main{display:none!important}
+.password-gate{position:fixed;inset:0;z-index:99999;display:none;place-items:center;padding:20px;background:linear-gradient(135deg,#102a43,#0e7490);color:#102a43}
+body.is-locked .password-gate{display:grid}
+.password-box{width:min(100%,420px);background:#fff;border:1px solid #ffffff55;border-radius:22px;padding:28px;box-shadow:0 24px 70px #001b2f66;text-align:center}
+.password-box h2{margin:0 0 8px;font-size:28px}.password-box p{margin:0 0 20px;color:#60758a;line-height:1.5}
+.password-field{display:grid;gap:8px;text-align:left}.password-field label{font-weight:800}.password-field input{width:100%;padding:13px 14px;border:1px solid #a9cfd4;border-radius:12px;font:inherit;color:#102a43;background:#fff;outline:none}.password-field input:focus{border-color:#0e7490;box-shadow:0 0 0 3px #0e749022}
+.password-submit{width:100%;margin-top:14px;padding:13px 18px;border:0;border-radius:12px;background:#0e7490;color:#fff;font:inherit;font-weight:800;cursor:pointer}.password-submit:hover{filter:brightness(.94)}
+.password-error{min-height:22px;margin:10px 0 0!important;color:#b42318!important;font-weight:700;font-size:14px}
+.password-mark{width:58px;height:58px;display:grid;place-items:center;margin:0 auto 14px;border-radius:18px;background:#e9f4f5;font-size:29px}
+
 </style>
 </head>
-<body>
-<header><div class="wrap"><h1>NZ Travel Plan 2026 <span class="version">v4.3.11</span></h1><div class="stats header-cards"><div class="stat trip-card"><span class="trip-label">South Island Trip</span><b class="trip-period">2026-10-04 → 2026-10-19</b><div class="header-countdown"><span class="countdown-label" style="font-weight:400">Starts In:</span><strong id="countdown">Calculating...</strong></div></div><div class="stat route-card"><span class="route-label">Route</span><span style="font-weight:700">Queenstown → Te Anau → Queenstown → Wanaka → Lake Tekapo → Christchurch</span></div></div></div></header>
+<body class="is-locked">
+
+<div id="passwordGate" class="password-gate" role="dialog" aria-modal="true" aria-labelledby="passwordTitle">
+  <form id="passwordForm" class="password-box" autocomplete="off">
+    <div class="password-mark" aria-hidden="true">🔒</div>
+    <h2 id="passwordTitle">NZ Travel Plan 2026</h2>
+    <p>Please enter the password to open the travel plan.</p>
+    <div class="password-field">
+      <label for="passwordInput">Password</label>
+      <input id="passwordInput" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" required>
+    </div>
+    <button class="password-submit" type="submit">Open Travel Plan</button>
+    <p id="passwordError" class="password-error" role="alert" aria-live="polite"></p>
+  </form>
+</div>
+
+<header><div class="wrap"><h1>NZ Travel Plan 2026 <span class="version">v4.3.12</span></h1><div class="stats header-cards"><div class="stat trip-card"><span class="trip-label">South Island Trip</span><b class="trip-period">2026-10-04 → 2026-10-19</b><div class="header-countdown"><span class="countdown-label" style="font-weight:400">Starts In:</span><strong id="countdown">Calculating...</strong></div></div><div class="stat route-card"><span class="route-label">Route</span><span style="font-weight:700">Queenstown → Te Anau → Queenstown → Wanaka → Lake Tekapo → Christchurch</span></div></div></div></header>
 <div class="nav" id="nav"></div>
 <main>
 <section class="panel on" data-p="Daily Itinerary"><div class="card"><h2>Daily Itinerary</h2><div class="filter-panel two-filters"><label>Date<select id="itineraryDateSelect"></select></label><label>Category<select id="itineraryCategorySelect"></select></label></div><div class="scroll"><table><thead><tr><th>Date</th><th>Time</th><th>Location</th><th>Activity</th><th>Links</th><th>Category</th></tr></thead><tbody id="dayRows"></tbody></table></div><div class="export-area"><button type="button" class="export-btn" onclick="exportDailyItineraryToExcel()">Export Daily Itinerary for Excel</button></div></div></section>
@@ -283,4 +313,42 @@ function exportDailyItineraryToExcel(){
 }
 
 const depart=new Date('2026-10-04T00:00:00+13:00');function tick(){const d=depart-new Date();countdown.textContent=d>0?`${Math.floor(d/86400000)} Days ${Math.floor(d%86400000/3600000)} Hours`:'Trip Started / Completed'}tick();setInterval(tick,60000);
-</script></body></html>
+</script>
+<script>
+(function () {
+  'use strict';
+  var PASSWORD = '2026';
+  var form = document.getElementById('passwordForm');
+  var input = document.getElementById('passwordInput');
+  var error = document.getElementById('passwordError');
+
+  function unlockTravelPlan() {
+    document.body.classList.remove('is-locked');
+    document.getElementById('passwordGate').setAttribute('aria-hidden', 'true');
+    input.value = '';
+    error.textContent = '';
+    window.scrollTo(0, 0);
+  }
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (input.value === PASSWORD) {
+      unlockTravelPlan();
+    } else {
+      error.textContent = 'Incorrect password. Please try again.';
+      input.value = '';
+      input.focus();
+    }
+  });
+
+  input.addEventListener('input', function () {
+    error.textContent = '';
+  });
+
+  window.addEventListener('load', function () {
+    input.focus();
+  });
+})();
+</script>
+
+</body></html>
