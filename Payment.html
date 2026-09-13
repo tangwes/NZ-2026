@@ -56,7 +56,7 @@ h1{font-size:clamp(26px,5.4vw,44px);line-height:1.08;margin:0 0 12px;font-weight
   font-size:12.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(8px)}
 
 /* KPI strip */
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px}
 .kpi{position:relative;overflow:hidden;background:var(--surface);border:1px solid var(--line);
   border-radius:var(--r-lg);padding:17px 19px;box-shadow:var(--shadow-md);
   transition:transform .18s,box-shadow .18s}
@@ -67,6 +67,32 @@ h1{font-size:clamp(26px,5.4vw,44px);line-height:1.08;margin:0 0 12px;font-weight
   color:var(--muted);margin-bottom:7px;line-height:1.4}
 .kpi .value{font-size:clamp(19px,2.4vw,25px);font-weight:800;letter-spacing:-.02em;
   color:var(--teal-dark);font-variant-numeric:tabular-nums}
+.kpi .k-ico{position:absolute;top:15px;right:15px;display:grid;place-items:center;
+  width:38px;height:38px;border-radius:12px;background:var(--teal-soft);font-size:18px;line-height:1}
+.kpi .label,.kpi .value{padding-right:46px}
+.kpi-link{cursor:pointer}
+.kpi-link .k-go{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--teal);
+  opacity:0;transform:translateX(-4px);transition:opacity .18s,transform .18s}
+.kpi-link:hover .k-go{opacity:1;transform:none}
+
+/* ---------- TREND CHART ---------- */
+.trendstats{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:14px;
+  border-bottom:1px solid var(--line-2)}
+.trendstats span{display:grid;gap:2px}
+.trendstats small{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--muted)}
+.trendstats b{font-size:17px;font-weight:800;color:var(--teal-dark);font-variant-numeric:tabular-nums}
+.trendstats b i{margin-left:7px;font-size:12px;font-style:normal;font-weight:700;color:var(--muted)}
+.trendscroll{overflow-x:auto;scrollbar-width:thin}
+.trend{display:block;min-width:100%;overflow:visible}
+.trend .tbase{stroke:#d9e6e8;stroke-width:1.5}
+.trend .tavg{stroke:#c9b78e;stroke-width:1.5;stroke-dasharray:5 5}
+.trend .tavgt{font-size:10.5px;font-weight:700;fill:#a8925f;font-family:inherit}
+.trend .thit{fill:transparent;cursor:pointer}
+.trend .tbar{fill:#d8ecee;transition:fill .18s}
+.trend .tcol:hover .tbar{fill:var(--teal)}
+.trend .tline{fill:none;stroke:var(--teal);stroke-width:2.4;stroke-linejoin:round;stroke-linecap:round}
+.trend .tdot{fill:#fff;stroke:var(--teal);stroke-width:2.2}
+.trend .tlab{font-size:10.5px;font-weight:600;fill:var(--muted);font-family:inherit}
 
 /* ---------- TAB NAV ---------- */
 .navbar{position:sticky;top:0;z-index:40;margin-top:-14px;
@@ -290,6 +316,15 @@ select{appearance:none;cursor:pointer;padding-right:38px;
 .dv-track .axis{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#cddcdf;transform:translateX(-1px)}
 .dv-val{font-size:13.5px;font-weight:800;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 
+/* toast */
+.toast{position:fixed;left:50%;bottom:26px;z-index:998;display:flex;align-items:center;gap:9px;
+  padding:13px 20px;border-radius:var(--r-full);background:rgba(13,36,54,.95);color:#fff;
+  font-size:14px;font-weight:700;box-shadow:0 12px 32px rgba(13,36,54,.3);max-width:calc(100vw - 32px);
+  opacity:0;transform:translate(-50%,14px);pointer-events:none;transition:opacity .22s,transform .22s}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast span{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;
+  background:var(--pos);font-size:12px;flex:0 0 auto}
+
 /* tooltip */
 .charttip{position:fixed;z-index:999;display:grid;gap:1px;padding:9px 13px;pointer-events:none;
   border-radius:11px;background:rgba(13,36,54,.95);color:#fff;box-shadow:0 10px 28px rgba(13,36,54,.3);
@@ -362,15 +397,18 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
 
 /* ---------- RESPONSIVE ---------- */
 @media(max-width:1000px){
-  .kpis{grid-template-columns:repeat(3,1fr)}
   .grid-3,.persons{grid-template-columns:1fr}
   .form{grid-template-columns:repeat(4,1fr)}
 }
 @media(max-width:760px){
   body{font-size:14.5px}
   .wrap{padding:0 14px}
-  .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
-  .kpi{padding:13px 14px}
+  .kpis{grid-template-columns:1fr;gap:10px}
+  .kpi{padding:14px 15px}
+  .kpi .k-ico{width:34px;height:34px;font-size:16px;top:13px;right:13px}
+  .kpi-link .k-go{opacity:1;transform:none}
+  .trendstats{gap:16px}
+  .trendstats b{font-size:15px}
   .nav{padding:10px 0}
   .nav button{padding:9px 15px;font-size:13.5px}
   .card{padding:16px 14px;border-radius:var(--r-lg)}
@@ -422,7 +460,6 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
   .summary-bar{justify-content:space-between;gap:10px}
 }
 @media(max-width:420px){
-  .kpis{grid-template-columns:1fr}
   .form{grid-template-columns:1fr}
   .span2,.span3,.span6{grid-column:1}
 }
@@ -467,21 +504,23 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
   </div>
 
   <section class="kpis">
-    <div class="kpi"><span class="label">總支出</span><div class="value" id="total">NT$0</div></div>
-    <div class="kpi"><span class="label">平均 / 人（共同）</span><div class="value" id="avg">NT$0</div></div>
-    <div class="kpi"><span class="label">支出筆數</span><div class="value" id="count">0</div></div>
-    <div class="kpi"><span class="label">旅伴人數</span><div class="value" id="pcount">0</div></div>
-    <div class="kpi"><span class="label">建議轉帳筆數</span><div class="value" id="tcount">0</div></div>
+    <div class="kpi"><span class="k-ico">👥</span><span class="label">平均 / 人（共同）</span><div class="value" id="avg">NT$0</div></div>
+    <div class="kpi kpi-link" onclick="goTab('list')" title="前往明細"><span class="k-ico">🧾</span><span class="label">支出筆數</span><div class="value" id="count">0</div><span class="k-go">前往明細 →</span></div>
+    <div class="kpi kpi-link" onclick="goTab('settle')" title="前往結算"><span class="k-ico">🤝</span><span class="label">建議轉帳筆數</span><div class="value" id="tcount">0</div><span class="k-go">前往結算 →</span></div>
   </section>
 
   <div class="card">
-    <div class="card-head"><h2><span class="accent"></span>最近支出</h2><span class="count-pill" id="recentPill">0 筆</span></div>
-    <div id="recentList"></div>
+    <div class="card-head">
+      <h2><span class="accent"></span>每日支出趨勢</h2>
+      <span class="count-pill" id="trendPill">0 天</span>
+    </div>
+    <div id="trendChart"></div>
   </div>
 </section>
 
 <!-- ===================== 支出 ===================== -->
-<section class="panel" data-p="expense">
+<!-- ===================== 新增 ===================== -->
+<section class="panel" data-p="add">
   <div class="card">
     <div class="card-head">
       <h2><span class="accent"></span>新增支出</h2>
@@ -490,12 +529,12 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
     <div class="form">
       <div class="field"><label>日期</label><input id="date" type="date"></div>
       <div class="field"><label>類別</label><select id="category" onchange="toggleLodgingFields()"></select></div>
-      <div class="field span2"><label>項目</label><input id="item" placeholder="例如：晚餐"></div>
+      <div class="field span2"><label>內容</label><input id="item" placeholder="例如：晚餐"></div>
       <div class="field"><label>地點</label><select id="location"></select></div>
       <div class="field"><label>總金額</label><input id="amount" type="number" min="0" step=".01" oninput="updateNightlyRate()"></div>
       <div class="field lodging" id="nightsWrap"><label>住宿晚數</label><input id="nights" type="number" min="1" step="1" placeholder="例如：3" oninput="updateNightlyRate()"></div>
       <div class="field lodging" id="nightlyWrap"><label>每晚金額（自動）</label><input id="nightlyRate" class="readonly" type="text" value="NT$0" readonly></div>
-      <div class="field span2"><label>備註</label><input id="note" placeholder="例如：含城市稅"></div>
+      <div class="field span2"><label>備註（選填）</label><input id="note" placeholder="例如：含城市稅"></div>
       <div class="field"><label>付款人</label><select id="payer"></select></div>
       <div class="field span6"><label>分攤人員</label><div class="checks" id="checks"></div></div>
       <div class="span6 tools">
@@ -506,7 +545,10 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
       </div>
     </div>
   </div>
+</section>
 
+<!-- ===================== 明細 ===================== -->
+<section class="panel" data-p="list">
   <div class="card">
     <div class="card-head">
       <h2><span class="accent"></span>花費明細</h2>
@@ -544,28 +586,28 @@ footer{padding:0 0 44px;text-align:center;color:var(--muted);font-size:12.5px;li
     </div>
   </div>
   <div class="card">
+    <div class="card-head"><h2><span class="accent"></span>個人支出類別分析</h2></div>
+    <div class="persons" id="persons"></div>
+  </div>
+</section>
+
+<!-- ===================== 結算 ===================== -->
+<section class="panel" data-p="settle">
+  <div class="card">
+    <div class="card-head">
+      <h2><span class="accent"></span>結算</h2>
+      <span class="count-pill" id="settleCount">0 筆轉帳</span>
+    </div>
+    <p class="settle-note"><span>ℹ️</span><span>結算方式採用最少轉帳次數計算</span></p>
+    <div class="settles" id="settles"></div>
+  </div>
+  <div class="card">
     <div class="card-head"><h2><span class="accent"></span>每人結餘</h2><span class="count-pill" id="balCount">0 人</span></div>
     <div id="balChart"></div>
     <div class="tablewrap"><table>
       <thead><tr><th>姓名</th><th class="money">已付款</th><th class="money">應負擔</th><th class="money">淨額</th></tr></thead>
       <tbody id="balances"></tbody>
     </table></div>
-  </div>
-  <div class="card">
-    <div class="card-head"><h2><span class="accent"></span>個人支出類別分析</h2></div>
-    <div class="persons" id="persons"></div>
-  </div>
-</section>
-
-<!-- ===================== 建議清算 ===================== -->
-<section class="panel" data-p="settle">
-  <div class="card">
-    <div class="card-head">
-      <h2><span class="accent"></span>清算</h2>
-      <span class="count-pill" id="settleCount">0 筆轉帳</span>
-    </div>
-    <p class="settle-note"><span>ℹ️</span><span>結算方式採用最少轉帳次數計算</span></p>
-    <div class="settles" id="settles"></div>
   </div>
 </section>
 
@@ -725,7 +767,7 @@ function avatar(name,cls){
 }
 
 /* ---------- tabs ---------- */
-const TABS=[['overview','總覽','🏠'],['expense','支出','🧾'],['analysis','分析','📊'],['settle','清算','🤝'],['settings','設定','⚙️']];
+const TABS=[['overview','總覽','🏠'],['add','新增','➕'],['list','明細','🧾'],['analysis','分析','📊'],['settle','結算','🤝'],['settings','設定','⚙️']];
 const navEl=$('nav');
 TABS.forEach(([key,label,ico],i)=>{
   const b=document.createElement('button');
@@ -780,10 +822,8 @@ function render(){
   const shared=state.people.length
     ? state.expenses.filter(e=>e.participants.length===state.people.length&&state.people.every(p=>e.participants.includes(p)))
         .reduce((a,e)=>a+(+e.amount||0),0) : 0;
-  $('total').textContent=fmt(total);
   $('avg').textContent=fmt(state.people.length?shared/state.people.length:0);
   $('count').textContent=state.expenses.length;
-  $('pcount').textContent=state.people.length;
 
   list('people',state.people,'people',true);
   list('categoryList',state.categories,'categories');
@@ -837,18 +877,10 @@ function render(){
       </div>`).join('')
     : '<div class="empty"><span class="e-ico">✅</span>目前帳務已平衡，不需轉帳</div>';
 
-  renderRecent();
+  renderTrend();
   renderPersons();
 }
 
-function renderRecent(){
-  const a=state.expenses.map((e,i)=>({...e,_i:i}))
-    .sort((x,y)=>String(y.date||'').localeCompare(String(x.date||''))).slice(0,5);
-  $('recentPill').textContent=`最新 ${a.length} 筆`;
-  $('recentList').innerHTML=a.length
-    ? `<div class="daygroup"><div class="daybody">${a.map(expRow).join('')}</div></div>`
-    : '<div class="empty"><span class="e-ico">🧾</span>尚無支出紀錄，請至「支出」分頁新增</div>';
-}
 
 const EMPTY_CHART='<div class="empty"><span class="e-ico">📭</span>尚無支出資料</div>';
 
@@ -926,6 +958,68 @@ function divergingBars(people,b){
     }).join('')+`</div></div>`;
 }
 
+/* ---- daily spending trend: SVG columns + trend line ---- */
+function renderTrend(){
+  const byDay={};
+  state.expenses.forEach(e=>{if(e.date)byDay[e.date]=(byDay[e.date]||0)+(+e.amount||0)});
+  const days=Object.keys(byDay).sort();
+  $('trendPill').textContent=`${days.length} 天`;
+  if(!days.length){
+    $('trendChart').innerHTML='<div class="empty"><span class="e-ico">\uD83D\uDCC8</span>尚無支出紀錄，新增後顯示每日趨勢</div>';
+    return;
+  }
+  // fill the gaps so quiet days still show on the axis
+  const first=new Date(days[0]+'T00:00:00'), last=new Date(days[days.length-1]+'T00:00:00');
+  const span=Math.round((last-first)/86400000)+1;
+  const series=[];
+  if(span<=62){
+    for(let i=0;i<span;i++){
+      const d=new Date(first.getTime()+i*86400000).toISOString().slice(0,10);
+      series.push([d,byDay[d]||0]);
+    }
+  }else days.forEach(d=>series.push([d,byDay[d]]));
+
+  const max=Math.max(...series.map(x=>x[1]),1);
+  const totalAll=series.reduce((a,x)=>a+x[1],0);
+  const avgDay=totalAll/series.filter(x=>x[1]>0).length;
+  const W=Math.max(560,series.length*46), H=190, PAD=26;
+  const bw=Math.min(30,(W-PAD*2)/series.length*.6);
+  const stepX=(W-PAD*2)/Math.max(1,series.length-1);
+  const xAt=i=>series.length===1?W/2:PAD+i*stepX;
+  const yAt=v=>H-PAD-(v/max)*(H-PAD*2);
+
+  const bars=series.map(([d,v],i)=>{
+    const x=xAt(i), y=yAt(v), h=Math.max(v>0?2:0,H-PAD-y);
+    return `<g class="tcol" data-k="${esc(d)} ${weekday(d)}" data-v="${fmt(v)}" data-p="${v>0?((v/totalAll)*100).toFixed(1)+'% 佔比':'無支出'}">
+      <rect class="thit" x="${x-stepX/2}" y="${PAD-8}" width="${stepX}" height="${H-PAD*2+16}"></rect>
+      <rect class="tbar" x="${x-bw/2}" y="${y}" width="${bw}" height="${h}" rx="4"></rect>
+    </g>`;
+  }).join('');
+  const pts=series.map(([,v],i)=>`${xAt(i)},${yAt(v)}`).join(' ');
+  const line=series.length>1?`<polyline class="tline" points="${pts}"></polyline>`:'';
+  const dots=series.map(([,v],i)=>v>0?`<circle class="tdot" cx="${xAt(i)}" cy="${yAt(v)}" r="3.2"></circle>`:'').join('');
+  const avgY=yAt(avgDay);
+  const avgLine=`<line class="tavg" x1="${PAD-6}" y1="${avgY}" x2="${W-PAD+6}" y2="${avgY}"></line>
+    <text class="tavgt" x="${W-PAD+4}" y="${avgY-6}" text-anchor="end">日均 ${fmt(avgDay)}</text>`;
+  const labels=series.map(([d],i)=>{
+    const every=Math.ceil(series.length/12);
+    if(i%every&&i!==series.length-1)return '';
+    return `<text class="tlab" x="${xAt(i)}" y="${H-6}" text-anchor="middle">${d.slice(5)}</text>`;
+  }).join('');
+
+  const peak=series.reduce((a,x)=>x[1]>a[1]?x:a,series[0]);
+  $('trendChart').innerHTML=`
+    <div class="trendstats">
+      <span><small>期間總計</small><b>${fmt(totalAll)}</b></span>
+      <span><small>有支出天數</small><b>${series.filter(x=>x[1]>0).length} 天</b></span>
+      <span><small>單日最高</small><b>${fmt(peak[1])}<i>${peak[0].slice(5)}</i></b></span>
+    </div>
+    <div class="trendscroll"><svg class="trend" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" preserveAspectRatio="xMinYMid meet">
+      <line class="tbase" x1="${PAD-6}" y1="${H-PAD}" x2="${W-PAD+6}" y2="${H-PAD}"></line>
+      ${avgLine}${bars}${line}${dots}${labels}
+    </svg></div>`;
+}
+
 /* ---- shared tooltip (hover on desktop, tap on mobile) ---- */
 const tipEl=document.createElement('div');
 tipEl.className='charttip';document.body.appendChild(tipEl);
@@ -942,7 +1036,7 @@ function showTip(el,ev){
   clearTimeout(tipTimer);tipTimer=setTimeout(hideTip,2600);
 }
 function hideTip(){tipEl.classList.remove('on')}
-const TIPSEL='.arc,.leg-row,.hbar,.divrow';
+const TIPSEL='.arc,.leg-row,.hbar,.divrow,.tcol';
 document.addEventListener('mouseover',e=>{const t=e.target.closest(TIPSEL);if(t)showTip(t,e)});
 document.addEventListener('mouseout',e=>{if(e.target.closest(TIPSEL))hideTip()});
 document.addEventListener('click',e=>{const t=e.target.closest(TIPSEL);t?showTip(t,e):hideTip()});
@@ -1076,13 +1170,27 @@ function formData(){
 }
 function saveExpense(){
   const e=formData();if(!e)return;
-  if(editing===null)state.expenses.push(e);else state.expenses[editing]=e;
+  const wasEditing=editing!==null;
+  if(wasEditing)state.expenses[editing]=e;else state.expenses.push(e);
   resetForm();save();
+  if(wasEditing){toast('已儲存修改');goTab('list')}
+  else toast(`已新增「${e.item}」 ${fmt(e.amount)}`);
+}
+
+/* lightweight toast */
+let toastTimer=null;
+function toast(msg){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}
+  t.innerHTML=`<span>✓</span>${esc(msg)}`;
+  t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('on'),2400);
 }
 function editExpense(i){
   const e=state.expenses[i];
   editing=i;
-  goTab('expense');
+  goTab('add');
   $('date').value=e.date;$('item').value=e.item;$('note').value=e.note||'';$('amount').value=e.amount;
   render();
   $('category').value=e.category;$('location').value=e.location;$('payer').value=e.payer;
